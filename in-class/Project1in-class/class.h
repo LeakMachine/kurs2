@@ -19,6 +19,4 @@ public:
 
   void print();
 
-  friend std::ostream& operator<< <Type>(std::ostream& out, const TPair& pair);
-
 };
