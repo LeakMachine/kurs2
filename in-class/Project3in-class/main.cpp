@@ -165,8 +165,8 @@ int main() {
 			case 0: {break; };
 			case 1: {int a; std::cin >> a; intStack.push(a); break; };
 			case 2: {intStack.pop(); break; };
-			case 3: {break; };
-			case 4: {intStack.empty(); break; };
+			case 3: {while (!intStack.empty()) { std::cout << "| " << intStack.top() << " |" << std::endl; intStack.pop(); } std::cout << "------" << std::endl; break; };
+			case 4: {while (!intStack.empty()) { intStack.pop(); } break; };
 		}
 	}
 
@@ -179,7 +179,7 @@ int main() {
 	int iMenu2 = -1;
 
 	while (iMenu2 != 0) {
-		std::cout << "1 - insert element in set A, 2 - insert element in set B, 3 - find intersection, 4 - find union, 5 - find A - B, 6 - find addition for set, 0 - exit" << std::endl;
+		std::cout << "1 - insert element in set A, 2 - insert element in set B, 3 - find intersection, 4 - find union, 5 - find A - B, 6 - find addition for set, 7 - clean, 0 - exit" << std::endl;
 		std::cout << "Enter your command: ";
 		std::cin >> iMenu2;
 		switch (iMenu2) {
@@ -197,6 +197,7 @@ int main() {
 			std::cout << "intersection: " << std::endl;
 			copy(intSet3.begin(), intSet3.end(), ostream_iterator<int>(cout, " "));
 			std::cout << std::endl;
+			intSet3.clear();
 
 			break;
 		};
@@ -210,19 +211,33 @@ int main() {
 			std::cout << "union: " << std::endl;
 			copy(intSet3.begin(), intSet3.end(), ostream_iterator<int>(cout, " "));
 			std::cout << std::endl;
+			intSet3.clear();
 			break;
 		};
 		case 5: {
-			for (auto iter2 = intSet2.begin(); iter2 != intSet2.end(); iter2++) {
-				for (auto iter1 = intSet1.begin(); iter1 != intSet1.end(); iter1++) {
-					if (*iter1 != *iter2) {
-						intSet3.insert(*iter1);
+			bool fl = false;
+			for (auto& elem : intSet1) {
+				for (auto& _elem : intSet2) {
+					if (elem == _elem) {
+						fl = true;
 					}
 				}
+				if (!fl) intSet3.insert(elem);
+				fl = false;
+			}
+			for (auto& elem : intSet2) {
+				for (auto& _elem : intSet1) {
+					if (elem == _elem) {
+						fl = true;
+					}
+				}
+				if (!fl) intSet3.insert(elem);
+				fl = false;
 			}
 			std::cout << "a - b: " << std::endl;
 			copy(intSet3.begin(), intSet3.end(), ostream_iterator<int>(cout, " "));
 			std::cout << std::endl;
+			intSet3.clear();
 			break; 
 		};
 		case 6: {
@@ -230,28 +245,41 @@ int main() {
 			int a; 
 			std::cin >> a;
 			if (a == 0) {
-				for (auto iter1 = intSet1.begin(); iter1 != intSet1.end(); iter1++) {
-					for (auto iter2 = universe.begin(); iter2 != universe.end(); iter2++) {
-						if (*iter1 != *iter2) {
-							intSet3.insert(*iter2);
+				bool fl = false;
+				for (auto& elem : universe) {
+					for (auto& _elem : intSet1) {
+						if (elem == _elem) {
+							fl = true;
 						}
 					}
+					if (!fl) intSet3.insert(elem);
+					fl = false;
 				}
 			}
 			if (a == 1) {
-				for (auto iter1 = intSet2.begin(); iter1 != intSet2.end(); iter1++) {
-					for (auto iter2 = universe.begin(); iter2 != universe.end(); iter2++) {
-						if (*iter1 != *iter2) {
-							intSet3.insert(*iter2);
+				bool fl = false;
+				for (auto& elem : universe) {
+					for (auto& _elem : intSet2) {
+						if (elem == _elem) {
+							fl = true;
 						}
 					}
+					if (!fl) intSet3.insert(elem);
+					fl = false;
 				}
 			}
 			std::cout << "addition: " << std::endl;
 			copy(intSet3.begin(), intSet3.end(), ostream_iterator<int>(cout, " "));
 			std::cout << std::endl;
+			intSet3.clear();
 
 			break; 
+		};
+		case 7: {
+			intSet1.clear();
+			intSet2.clear();
+			intSet3.clear();
+			break;
 		};
 		}
 	}
