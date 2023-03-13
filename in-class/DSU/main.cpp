@@ -2,28 +2,40 @@
 #include "DSU.h"
 
 int main() {
-	DSU set;
 
-	set.MakeSet(1);
-	set.MakeSet(2);
-	set.MakeSet(3);
-	set.MakeSet(4);
-	set.MakeSet(5);
+    srand(time(0));
 
-	std::cout << set.Find(4) << std::endl;
+    int n = 2;
+    DSU z(n * n);
 
-	set.Unite(1, 4);
-	set.Unite(2, 5);
+    std::vector<int> wall;
+    for (int i = 1; i <= n * n * 2 - 2; ++i) {
+        if (i % (2 * n) == 0) continue;
+        if (i > n * (n - 1) * 2) continue;
+        wall.push_back(i);
+    }
 
-	std::cout << set.Find(4) << std::endl;
-	std::cout << set.Find(1) << std::endl;
-	std::cout << set.Find(2) << std::endl;
-	
-	set.Unite(3, 5);
+    while (wall.size() > 0) {
+        int size = wall.size();
 
-	std::cout << set.Find(5) << std::endl;
-	std::cout << set.Find(3) << std::endl;
-	std::cout << set.Find(2) << std::endl;
+        int j = rand() % size;
+
+        int x = (wall[j] - 1) / 2;
+        if (wall[j] % 2 == 0) {
+            if (z.Find(x) != z.Find(x + 1)) {
+                z.Unite(z.Find(x), z.Find(x + 1));
+                z.setRightFalse(x);
+            }
+        }
+        else {
+            if (z.Find(x) != z.Find(x + n)) {
+                z.Unite(z.Find(x), z.Find(x + n));
+                z.setBottomFalse(x);
+            }
+        }
+        wall.erase(wall.begin() + j);
+    }
+    z.print();
 
 	return 0;
 }
