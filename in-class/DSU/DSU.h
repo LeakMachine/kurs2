@@ -9,8 +9,8 @@ protected:
 	int size;
 	int* p;
 	int* rank;
-	bool* bottom = new bool[size];
-	bool* right = new bool[size];
+	bool* right;
+	bool* bottom;
 public:
 	DSU(int  _size) {
 		size = _size;
@@ -24,22 +24,23 @@ public:
 	}
 	void MakeSet(int x) {
 		p[x] = x;
+		rank[x] = 0;
 	}
 	int Find(int x) {
-		if (p[x] == x)
-			return x;
-		return p[x] = Find(p[x]);
+		if (x != p[x])
+			return Find(p[x]);
+		return x;
 	}
-	void Unite(int a, int b) {
-		a = Find(a);
-		b = Find(b);
-		if (rank[a] < rank[b])
-			p[a] = b;
+	void Unite(int x, int y) {
+		int px = Find(x);
+		int py = Find(y);
+		if (rank[x] > rank[y])
+			p[py] = px;
 		else
 		{
-			p[b] = a;
-			if (rank[a] == rank[b])
-				++rank[a];
+			p[px] = py;
+			if (rank[x] == rank[y])
+				++rank[py];
 		}
 	}
 
@@ -50,44 +51,6 @@ public:
 	void setRight(int x) { right[x] = true; }
 	void setBottom(int x) { bottom[x] = true; }
 
-	void print() {
-		std::cout << size << std::endl;
-
-		std::cout << "+";
-		for (int i = 0; i < size - 1; i++) {
-			std::cout << "--+";
-		}
-		std::cout << "   +";
-		std::cout << std::endl;
-
-		for (int i = 0; i < size; i++) {
-			std::cout << "|";
-			for (int j = 0; j < size; j++) {
-				if (getRight(i * size + j)) {
-					std::cout << "   ";
-				}
-				else {
-					std::cout << "  |";
-				}
-				if (j + 1 == size) {
-					std::cout << "|";
-				}
-			}
-			std::cout << std::endl;
-			std::cout << "+";
-			for (int j = 0; j < size; j++) {
-				if (getBottom(i * j)) {
-					std::cout << "--+";
-				}
-				else {
-					std::cout << "  +";
-				}
-			}
-			std::cout << "|";
-			std::cout << std::endl;
-		}
-
-	}
 };
 
 

@@ -1,17 +1,18 @@
 #include <iostream>
 #include "DSU.h"
 
+#include <random>
+
 int main() {
 
     srand(time(0));
 
-    int n = 2;
+    int n = 4;
     DSU z(n * n);
 
     std::vector<int> wall;
-    for (int i = 1; i <= n * n * 2 - 2; ++i) {
-        if (i % (2 * n) == 0) continue;
-        if (i > n * (n - 1) * 2) continue;
+    for (int i = 0; i <= n * n * 2 - 2; i++) {
+        if ((i % (2 * n) == 0) || (i > n * (n - 1) * 2)) continue;
         wall.push_back(i);
     }
 
@@ -35,7 +36,33 @@ int main() {
         }
         wall.erase(wall.begin() + j);
     }
-    z.print();
+    std::cout << "   ";
+    for (int i = 1; i < n; i++) {
+        std::cout << "___";
+    }
+    std::cout << std::endl;
+
+    for (int i = 0; i < n; i++) {
+        std::cout << "|";
+        for (int j = n * i; j < n + n * i; j++) {
+            if (j == n * n - 1) {
+                std::cout << "  |";
+            }
+            else if (z.getRight(j) && z.getBottom(j)) {
+                std::cout << "__|";
+            }
+            else if (z.getRight(j)) {
+                std::cout << "  |";
+            }
+            else if (z.getBottom(j)) {
+                std::cout << "__ ";
+            }
+            else {
+                std::cout << "   ";
+            }
+        }
+        std::cout << std::endl;
+    }
 
 	return 0;
 }
