@@ -105,10 +105,50 @@ protected:
 		if (_node->right == NULL) {
 			return findMin(_node->right);
 		}
+		else {
+			CNode<Type>* parentNode = _node->parent;
+			CNode<Type>* currentNode = _node;
+
+			while ((parentNode != NULL) &&
+				(currentNode == parentNode->right))
+			{
+				currentNode = parentNode;
+				parentNode = currentNode->parent;
+			}
+
+			if (parentNode == NULL) {
+				return -1;
+			}
+			else {
+				parentNode->data;
+			}
+		}
 
 	}
 	Type predecessor(CNode<Type>* _node) {
+		if (node->Left != NULL)
+		{
+			return FindMax(node->left);
+		}
+		else
+		{
+			CNode<Type>* parentNode = _node->parent;
+			CNode<Type>* currentNode = _node;
 
+			while ((parentNode != NULL) &&
+				(currentNode == parentNode->left))
+			{
+				currentNode = parentNode;
+				parentNode = currentNode->parent;
+			}
+
+			if (parentNode == NULL) {
+				return -1;
+			}
+			else {
+				parentNode->data;
+			}
+		}
 	}
 	CNode<Type>* remove(CNode<Type>* _node, Type _data) {
 		if (_node == NULL) {
@@ -126,13 +166,41 @@ protected:
 				_node->left->parent = _node->parent;
 				_node = _node->left;
 			}
-			else {
-
+			else
+			{
+				int successorKey = successor(_data);
+				node->data = successorKey;
+				node->right = remove(node->right, successorKey);
 			}
-
 		}
+		else if (node->data < _data)
+			node->right = remove(node->right, _data);
+		else
+			node->left = remove(node->left, _data);
+
+		return _node;
 	}
 public:
+	Type predecessor(Type _data)
+	{
+		CNode<Type>* keyNode = find(root, _data);
+
+		if (keyNode == NULL) {
+			return -1;
+		}
+		else {
+			return predecessor(keyNode);
+		}
+	}
+	Type successor(Type _data) {
+		CNode<Type>* keyNode = find(root, _data);
+		if (keyNode == NULL) {
+			return -1;
+		}
+		else {
+			return successor(keyNode);
+		}
+	}
 	void insert(Type _data) {
 		root = insert(root, _data);
 	}
@@ -145,7 +213,9 @@ public:
 			return true;
 		}
 	}
-	void remove(Type _data);
+	void remove(Type _data) {
+		root = remove(root, key);
+	}
 	Type findMin(Type _data) {
 		return findMin(root);
 	}
