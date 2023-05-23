@@ -3,17 +3,20 @@
 
 int main() {
 	CTreeF<int> tree;
+	CTreeExpr<char> treeExpr;
 
 	tree.insert(0);
 	tree.insert(2);
 	tree.insert(-1);
+	tree.insert(3);
+	tree.remove(2);
 
-	if (tree.find(-1) == true) {
-		std::cout << "TOTAL C++ DEATH" << std::endl;
+	if (tree.find(3)) {
+		std::cout << "it's working" << std::endl;
 	}
-	if (tree.find(4) == false) {
-		std::cout << "TOTAL PYTHON DEATH" << std::endl;
-	}
+
+	treeExpr.buildExpressionTree("*+42/53");
+	std::cout << treeExpr.evaluateExpressionTree() << std::endl;
 
 	return 0;
 }
