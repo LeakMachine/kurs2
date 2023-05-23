@@ -34,18 +34,18 @@ private:
 	CNode<Type>* root = nullptr;
 protected:
 	bool find(CNode<Type>* _node, Type _data) {
-		if (root == nullptr) {
+		if (_node == nullptr) {
 			return false;
 		}
 
-		if (root->data == _data) {
+		if (_node->data == _data) {
 			return true;
 		}
-		else if (_data < root->data) {
-			return find(root->left, _data);
+		else if (_data < _node->data) {
+			return find(_node->left, _data);
 		}
 		else {
-			return find(root->right, _data);
+			return find(_node->right, _data);
 		}
 	}
 	CNode<Type>* findMin(CNode<Type>* _node) {
@@ -139,16 +139,13 @@ protected:
 			return 0;
 		}
 
-		// ≈сли узел €вл€етс€ операндом, возвращаем его значение
 		if (isdigit(_node->data)) {
 			return _node->data - '0';
 		}
 
-		// –екурсивно вычисл€ем значени€ левого и правого поддеревьев
 		int leftValue = evaluateExpressionTree(_node->left);
 		int rightValue = evaluateExpressionTree(_node->right);
 
-		// ¬ыполн€ем операцию, указанную в узле
 		switch (_node->data) {
 		case '+':
 			return leftValue + rightValue;

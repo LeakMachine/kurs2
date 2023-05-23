@@ -15,7 +15,7 @@ int main() {
 		std::cout << "it's working" << std::endl;
 	}
 
-	treeExpr.buildExpressionTree("*+42/53");
+	treeExpr.buildExpressionTree("+*222");
 	std::cout << treeExpr.evaluateExpressionTree() << std::endl;
 
 	return 0;

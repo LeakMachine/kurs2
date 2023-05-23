@@ -342,8 +342,7 @@ CPolynomial CPolynomial::operator+(CMonomial _monomial)
     cpy.cpy(list);
     while (!cpy.isEmpty()) {
         CMonomial monom;
-        monom = cpy.pop_back();
-        while (monom.degree[0] << _monomial.degree[0] ||
+        while (!cpy.isEmpty() && monom.degree[0] << _monomial.degree[0] ||
             (monom.degree[0] == _monomial.degree[0] && monom.degree[1] < _monomial.degree[1]) ||
             (monom.degree[0] == _monomial.degree[0] && monom.degree[1] == _monomial.degree[1] && monom.degree[2] < _monomial.degree[2])) {
             monom = cpy.pop_back();
@@ -367,8 +366,7 @@ CPolynomial CPolynomial::operator-(CMonomial _monomial)
     cpy.cpy(list);
     while (!cpy.isEmpty()) {
         CMonomial monom;
-        monom = cpy.pop_back();
-        while (monom.degree[0] << _monomial.degree[0] ||
+        while (!cpy.isEmpty() && monom.degree[0] << _monomial.degree[0] ||
             (monom.degree[0] == _monomial.degree[0] && monom.degree[1] < _monomial.degree[1]) ||
             (monom.degree[0] == _monomial.degree[0] && monom.degree[1] == _monomial.degree[1] && monom.degree[2] < _monomial.degree[2])) {
             monom = cpy.pop_back();
@@ -443,10 +441,9 @@ CPolynomial CPolynomial::operator+(CPolynomial _polynomial) {
         {
             new_list.push_back(monom1);
         }
-        else if (monom1.degree[0] < monom2.degree[0] ||
-            (monom1.degree[0] == monom2.degree[0] && monom1.degree[1] < monom2.degree[1]) &&
-            (monom1.degree[0] == monom2.degree[0] && monom1.degree[1] == monom2.degree[1] &&
-                monom1.degree[2] < monom2.degree[2]))
+        if (monom1.degree[0] < monom2.degree[0] ||
+            monom1.degree[1] < monom2.degree[1] ||
+            monom1.degree[2] < monom2.degree[2])
         {
             new_list.push_back(monom2);
         }
@@ -493,10 +490,10 @@ CPolynomial CPolynomial::operator-(CPolynomial _polynomial)
         {
             new_list.push_back(monom1);
         }
-        else if (monom1.degree[0] < monom2.degree[0] ||
-            (monom1.degree[0] == monom2.degree[0] && monom1.degree[1] < monom2.degree[1]) &&
-            (monom1.degree[0] == monom2.degree[0] && monom1.degree[1] == monom2.degree[1] &&
-                monom1.degree[2] < monom2.degree[2]))
+        if (monom1.degree[0] < monom2.degree[0] ||
+            monom1.degree[1] < monom2.degree[1] ||
+            monom1.degree[1] == monom2.degree[1] ||
+                monom1.degree[2] < monom2.degree[2])
         {
 
             CMonomial monom3 = monom2;
@@ -572,14 +569,16 @@ CPolynomial CPolynomial::operator*(double _coefficient)
 CPolynomial CPolynomial::operator/(CPolynomial _polynomial)
 {
     CPolynomial result;
+    CPolynomial copy = _polynomial;
+    CPolynomial copy2 = _polynomial;
     if (_polynomial.list.isEmpty())
         throw std::invalid_argument("Division by Zero.");
-    if (_polynomial.list.size == 1 &&
-        (_polynomial.list.pop_front().degree[0] == 0 &&
-            _polynomial.list.pop_front().degree[1] == 0 &&
-            _polynomial.list.pop_front().degree[2] == 0))
+    if (copy.list.size == 1 &&
+        (copy.list.pop_front().degree[0] == 0 &&
+            copy.list.pop_front().degree[1] == 0 &&
+            copy.list.pop_front().degree[2] == 0))
     {
-        CMonomial divMon = _polynomial.list.pop_back();
+        CMonomial divMon = copy.list.pop_back();
         CList<CMonomial> cpylist;
         cpylist.cpy(list);
         while (!cpylist.isEmpty())
@@ -594,11 +593,11 @@ CPolynomial CPolynomial::operator/(CPolynomial _polynomial)
     else
     {
         CPolynomial divident = *this;
-        while (divident.list.size > 0 && (divident.list.getHead().degree[0] >= _polynomial.list.getHead().degree[0] &&
+        while (!divident.list.isEmpty() && !copy2.list.isEmpty() && divident.list.size > 0 && (divident.list.getHead().degree[0] >= _polynomial.list.getHead().degree[0] &&
             divident.list.getHead().degree[1] >= _polynomial.list.getHead().degree[1] &&
             divident.list.getHead().degree[2] >= _polynomial.list.getHead().degree[2]))
         {
-            CMonomial chastnoe = divident.list.pop_back() / _polynomial.list.pop_back();
+            CMonomial chastnoe = divident.list.pop_back() / copy2.list.pop_back();
             result.list.push_back(chastnoe);
             CPolynomial product = _polynomial * chastnoe;
             divident = divident - product;

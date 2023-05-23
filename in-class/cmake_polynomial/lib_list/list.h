@@ -49,7 +49,7 @@ public:
 		while (head != nullptr)
 			pop_front();
 	}
-	void cpy(const CList& obj) {
+	void cpy(const CList obj) {
 		clr();
 		CNode<Type>* tempNode = obj.head;
 
